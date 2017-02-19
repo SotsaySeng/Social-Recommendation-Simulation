@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package SocialRec;
+package SocialRecSimulation;
 
 import java.io.FileWriter;
 import java.io.PrintWriter;
@@ -20,13 +20,13 @@ import java.util.PriorityQueue;
  *
  * @author SocialRec
  */
-public class MyAlgorithm implements Algorithm{
+public class MyAlgorithm {
 
-    @Override
-    public Map<UserAgent,List<Item>> run() {
-     
-          return null;
-    }
+//    @Override
+//    public Map<UserAgent,List<Item>> run() {
+//     
+//          return null;
+//    }
  
     public static void main(String[] args) throws  Exception{
         List<UserDetail> users = InputReader.readUserDetailFromCSV();
@@ -44,11 +44,11 @@ public class MyAlgorithm implements Algorithm{
            mineSocialGoodValueList.put(Integer.parseInt(users.get(i).getUserId()), calSocialMine);
            traSocialGoodValueList.put(Integer.parseInt(users.get(i).getUserId()), calSocialTra);
            //return tra recommend
-           List topN = topN(recommendedList, 5);
+           List topN = topN(recommendedList, 13);
            Collections.reverse(topN);
            traRecommendedList.put(Integer.parseInt(users.get(i).getUserId()),topN);
            //return mine recommend
-           List topNMine = topN(recommendedListNew, 5);
+           List topNMine = topN(recommendedListNew, 13);
            Collections.reverse(topNMine);
            mineRecommendedList.put(Integer.parseInt(users.get(i).getUserId()),topNMine);
            //Loop social score
@@ -74,6 +74,7 @@ public class MyAlgorithm implements Algorithm{
             System.out.println("............................................");
         }
         System.out.println(mineTotalSocialFriendly);
+        System.out.println(users.get(0));
 
 //        return userSocialGoodValueList;
 //        PrintWriter pw = new PrintWriter(new FileWriter("abc.txt"));

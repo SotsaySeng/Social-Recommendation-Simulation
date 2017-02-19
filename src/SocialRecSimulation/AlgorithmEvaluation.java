@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package SocialRec;
+package SocialRecSimulation;
 
 import java.util.List;
 import java.util.Map;
@@ -14,10 +14,10 @@ import java.util.Map;
  */
 public class AlgorithmEvaluation {
 
-    public void evaluate(Map<UserAgent, List<Item>> trad, 
-            Map<UserAgent, List<Item>> mine, 
-            Map<UserAgent, List<Item>> metric) {
-        
-
-    }
+//    public void evaluate(Map<UserAgent, List<Item>> trad, 
+//            Map<UserAgent, List<Item>> mine, 
+//            Map<UserAgent, List<Item>> metric) {
+//        
+//
+//    }
 }
