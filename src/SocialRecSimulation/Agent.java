@@ -42,7 +42,7 @@ public class Agent implements Steppable{
            this.agentStatus = agentStatus;
     }
     
-    public List agentSelection (List recommendedItems) {
+    public List agentSelection (List recommendedItems,List rewards) {
         List<TravelRoute> items = Item.getRoute();
         List<String>  utilityValues = new ArrayList<>();
         List<Double>  totalUtilityList = new ArrayList<>();
@@ -61,11 +61,12 @@ public class Agent implements Steppable{
                     Double vTravelCost = Double.parseDouble(items.get(i).getTravelCost());
                     Double vTimeDelay = Double.parseDouble(items.get(i).getDelay());
                     Double vTimeWalk = Double.parseDouble(items.get(i).getWalk());
+                    Double vReward = (Double) rewards.get(i);
                     
                     //calculate personal 
-                    Double utilityValue = (wTime*vTravelTime)+(wCost*vTravelCost)+
-                                            (wDelay*vTimeDelay)+(wWalk*vTimeWalk);
-                     totalUtilityList.add(utilityValue);
+                    Double utilityValue = (((wTime*vTravelTime)+(wCost*vTravelCost)+
+                                            (wDelay*vTimeDelay)+(wWalk*vTimeWalk))+vReward);
+                    totalUtilityList.add(utilityValue);
                 }
         return totalUtilityList;
                 

@@ -78,6 +78,7 @@ public class RSAgent {
                     //combine
                     
                     Double totalUtility = (utilityValue*(1-socialGoodWeight))+(utilitySocial*socialGoodWeight);
+                    utilityValues.add(utilityValue);
                     totalUtilityList.add(totalUtility);
                     idTotalUtility.put(vId, totalUtility);
   
@@ -85,6 +86,59 @@ public class RSAgent {
                
         return totalUtilityList;
     }
+   public List reward(int agentId,int vTime, int vCost, int vDelay, int vWalk, Double incentiveRate){
+        
+        Double [] userWeight = weigthExtract(vTime,vCost,vDelay,vWalk);
+        Double wTime = userWeight[0];
+        Double wCost = userWeight[1];
+        Double wDelay = userWeight[2];
+        Double wWalk = userWeight[3];
+        
+        //social friendly
+        List<TravelRoute> items = Item.getRoute();
+        List<Double>  utilityValues = new ArrayList<>();
+        List<String>  utilitySocials = new ArrayList<>();
+        List<Double>  totalUtilityList = new ArrayList<>();
+        Map idUtilityValue = new HashMap();
+        Map idUtilitySocial = new HashMap();
+        Map idTotalUtility = new HashMap();
+        for(int i=0 ;i< items.size();i++)
+                {
+                    //personal
+                    String vId = items.get(i).getId();
+                    Double vTravelTime = Double.parseDouble(items.get(i).getTravelTime());
+                    Double vTravelCost = Double.parseDouble(items.get(i).getTravelCost());
+                    Double vTimeDelay = Double.parseDouble(items.get(i).getDelay());
+                    Double vTimeWalk = Double.parseDouble(items.get(i).getWalk());
+                    //social
+                    Double vCongestion = Double.parseDouble(items.get(i).getCongestion());
+                    Double vAccident = Double.parseDouble(items.get(i).getAccident());
+                    Double vPollution = Double.parseDouble(items.get(i).getPollution());
+                    Double vTrafficCon = Double.parseDouble(items.get(i).getTrafficCon());
+                    //calculate personal 
+                    Double utilityValue = (wTime*vTravelTime)+(wCost*vTravelCost)+
+                                            (wDelay*vTimeDelay)+(wWalk*vTimeWalk);
+                    //calculate social
+                    Double utilitySocial= (wCongestion*vCongestion)+(wAccident*vAccident)+
+                                            (wPollution*vPollution)+(wTrafficCon*vTrafficCon);
+//                    //add to persoanl list and map with id
+//                    utilityValues.add(utilityValue);
+//                    idUtilityValue.put(vId, utilityValue);
+//                    //add to social list and map with id
+//                    utilitySocials.add(String.valueOf(utilitySocial));
+//                    idUtilitySocial.put(vId, utilitySocial);
+                    //combine
+                    
+                    Double totalUtility = (utilityValue*(1-socialGoodWeight))+(utilitySocial*socialGoodWeight);
+                    utilityValues.add(utilityValue);
+                    totalUtilityList.add(totalUtility);
+                    idTotalUtility.put(vId, totalUtility);
+  
+                }
+            List rewards = rewardCalculate(utilityValues,totalUtilityList,incentiveRate);
+               
+        return rewards;
+    } 
     
    public static Double[] weigthExtract (int vTime, int vCost, int vDelay, int vWalk){
         double wTime;
@@ -100,7 +154,7 @@ public class RSAgent {
         return new Double[] {wTime,wCost,wDelay,wWalk};
     }
    
-   public static List<Double> rewardCalculate(List<Double> listX,List<Double> listY) {
+   public static List<Double> rewardCalculate(List<Double> listX,List<Double> listY, Double incentiveRate) {
                 int[] rankPersonal = getRanksArray(toDoubleArray(listX));
                 int[] rankSocial = getRanksArray(toDoubleArray(listY));
                 List<Double>  rewards = new ArrayList<>();
@@ -109,7 +163,7 @@ public class RSAgent {
                     double reward;
                     if(rankPersonal[i]>rankSocial[i]){
                         balancedValue = listY.get(i)- listX.get(i);
-                        reward = Math.abs(balancedValue);
+                        reward = incentiveRate*(Math.abs(balancedValue));
                                 }
                     else{
                         reward=0;

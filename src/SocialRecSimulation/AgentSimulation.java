@@ -17,14 +17,15 @@ public class AgentSimulation extends SimState {
         public int gridWidth = 100; // width of the space
         public int gridHeight = 100; // Height of the space
         
-    private final double statusThreshold = 1;
+    private final double statusThreshold = 0.7;
     private int countStatusTrue = 0;
     private int countStatusFalse = 0;
-    private double socialWeight = 0.25;
+    private double socialWeight = 0.5;
     private double wCongestion = 0.25;
     private double wAccident = 0.25;
     private double wPollution = 0.25;
     private double wTrafficCon = 0.25;
+    private double incentiveRate = 0.2;
 
     public AgentSimulation(long seed) {
         super(seed);
@@ -64,11 +65,12 @@ public class AgentSimulation extends SimState {
                //start agent request
                System.out.println("User " + id);
                List recommendedItems = rAgent.mineRecList(id, vTime, vCost, vDelay, vWalk);
+               List rewards = rAgent.reward(id, vTime, vCost, vDelay, vWalk,incentiveRate);
                System.out.println("Recommended route " + id);
                System.out.println(recommendedItems);
                //agent calculate its utility
                System.out.println("Personal route " + id);
-               List agentList = agent.agentSelection(recommendedItems);
+               List agentList = agent.agentSelection(recommendedItems,rewards);
                System.out.println(agentList);
                //compare
                Double spearCo = calculateRankCo(agentList, recommendedItems);
